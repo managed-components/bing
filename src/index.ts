@@ -1,41 +1,89 @@
 import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
-import { getEcommerceParams } from './ecommerce'
-import { gaDoubleClick } from './gaDoubleClick'
-import { getToolRequest } from './requestBuilder'
 
-const BASE_URL = 'https://www.google-analytics.com/collect?'
+const TRACK_URL = 'https://bat.bing.com/action/0'
 
-const getFullURL = (requestPayload: any) => {
-  const params = new URLSearchParams(requestPayload).toString()
-  return BASE_URL + params
+const getECParams = (event: MCEvent) => {
+  const { payload, name } = event
+  const data: any = {
+    ec: 'ecommerce',
+    gc: payload.currency,
+    gv: payload.revenue || payload.total || payload.value,
+  }
+
+  switch (name) {
+    case 'Order Completed':
+      data.ea = 'purchase'
+      data.el = payload.order_id || payload.checkout_id || payload.product_id
+      data.ev = payload.revenue || payload.total || payload.value
+      break
+    case 'Product Added':
+      data.ea = 'add_to_cart'
+      data.el =
+        payload.name ||
+        payload.product_id ||
+        payload.sku ||
+        payload.products?.map((p: any) => p.name).join()
+      data.ev = payload.price || payload.total || payload.value
+      data.gv = payload.price || data.gv
+      break
+    case 'Checkout Started':
+      data.ea = 'begin_checkout'
+      data.el = payload.checkout_id || payload.order_id || payload.product_id
+      data.ev = payload.revenue || payload.total || payload.value
+      break
+    case 'Subscribe':
+      data.ea = 'subscribe'
+      data.el = payload.order_id || payload.checkout_id || payload.product_id
+      data.ev = payload.revenue || payload.total || payload.value
+      break
+    default:
+      data.ea = name
+      data.el =
+        payload.order_id ||
+        payload.checkout_id ||
+        payload.product_id ||
+        payload.name ||
+        payload.products?.map((p: any) => p.name).join()
+      data.ev =
+        payload.revenue || payload.total || payload.value || payload.price
+  }
+  return data
 }
 
-const sendGA3Event = function (
-  event: MCEvent,
-  settings: ComponentSettings,
-  ecommerce = false
-) {
-  const requestPayload = getToolRequest(event, settings)
-
-  let ecommerceParams = {}
-  ecommerce && (ecommerceParams = getEcommerceParams(event))
-
-  const finalURL = getFullURL({ ...requestPayload, ...ecommerceParams })
-  fetch(finalURL)
-
-  if (settings['ga-audiences'] || settings['ga-doubleclick']) {
-    gaDoubleClick(event, settings, finalURL)
+const getStandardParams = (event: MCEvent) => {
+  return {
+    Ver: '2',
+    p: event.client.url.href,
+    tl: event.client.title || '',
+    lg: (event.client.language || '').split(',')[0].trim(),
+    rn: (+(Math.random() * 1000000)).toString(),
+    mid: crypto.randomUUID(),
+    // TODO - how do we want to handle these?
+    // sw: system.device.width,
+    // sh: system.device.height,
+    // sc: system.device.colors,
   }
 }
 
-export default async function (manager: Manager, settings: ComponentSettings) {
-  manager.addEventListener('event', event => sendGA3Event(event, settings))
+export default async function (manager: Manager, _settings: ComponentSettings) {
+  manager.addEventListener('event', async event => {
+    const payload = getStandardParams(event)
 
-  manager.addEventListener('pageview', event => {
-    sendGA3Event(event, settings)
+    if (Object.keys(payload).length) {
+      const params = new URLSearchParams(payload).toString()
+      event.client.fetch(`${TRACK_URL}?${params}`)
+    }
   })
 
-  manager.addEventListener('ecommerce', event => {
-    sendGA3Event(event, settings, true)
+  manager.addEventListener('ecommerce', async event => {
+    const payload = {
+      ...getStandardParams(event),
+      ...getECParams(event),
+    }
+
+    if (Object.keys(payload).length) {
+      const params = new URLSearchParams(payload).toString()
+      event.client.fetch(`${TRACK_URL}?${params}`)
+    }
   })
 }
