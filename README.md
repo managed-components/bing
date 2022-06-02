@@ -1,4 +1,4 @@
-# Google Analytics Managed Component
+# Bing Managed Component
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
