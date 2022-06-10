@@ -20,11 +20,11 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 ## 🧱 Fields Description
 
-### UET Tag ID `number` **required**
+### UET Tag ID `number` _required_
 
 `ti` is the unique identifier of your UET tag. [Learn more](https://help.ads.microsoft.com/apex/index/3/en/56705)
 
-### Event Type `string` **required**
+### Event Type `string` _required_
 
 `evt` - Choose between tracking a page load or a custom event
 
