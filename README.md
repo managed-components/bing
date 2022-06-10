@@ -18,6 +18,38 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 2. Install dependencies with `npm i`
 3. Run unit test watcher with `npm run test:dev`
 
+### ti _required_
+
+`number` The UET Tag ID is the unique identifier of your UET tag. [Learn more](https://help.ads.microsoft.com/apex/index/3/en/56705)
+
+### evt _required_
+
+`string` Event Type - Choose between tracking a page load or a custom event
+
+### ea
+
+`string` Event Action represents the type of user interaction you want to track. For example, `play` or `pause`. [Learn more](https://help.ads.microsoft.com/#apex/ads/en/56717/2-500)"
+
+### ec
+
+`string` Event Category represents the category of event you want to track. For example, `video`.
+
+### ev
+
+`string` Event Value - a numerical value associated with that event. For example, the length of the video played.
+
+### el
+
+`string` Event Label - the name of the element that caused the action. For example, `trailer` or `behindthescenes`
+
+### gv
+
+`string` Revenue Value is the revenue value of the event you want to track
+
+### gvc
+
+`string` Currency is the currency of the event you want to track
+
 ## 📝 License
 
 Licensed under the [Apache License](./LICENSE).
