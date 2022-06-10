@@ -20,37 +20,37 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 ## 🧱 Fields Description
 
-### ti _required_
+### UET Tag ID `number` **required**
 
-`number` The UET Tag ID is the unique identifier of your UET tag. [Learn more](https://help.ads.microsoft.com/apex/index/3/en/56705)
+`ti` is the unique identifier of your UET tag. [Learn more](https://help.ads.microsoft.com/apex/index/3/en/56705)
 
-### evt _required_
+### Event Type `string` **required**
 
-`string` Event Type - Choose between tracking a page load or a custom event
+`evt` - Choose between tracking a page load or a custom event
 
-### ea
+### Event Action `string`
 
-`string` Event Action represents the type of user interaction you want to track. For example, `play` or `pause`. [Learn more](https://help.ads.microsoft.com/#apex/ads/en/56717/2-500)"
+`ea` represents the type of user interaction you want to track. For example, `play` or `pause`. [Learn more](https://help.ads.microsoft.com/#apex/ads/en/56717/2-500)"
 
-### ec
+### Event Category `string`
 
-`string` Event Category represents the category of event you want to track. For example, `video`.
+`ec` represents the category of event you want to track. For example, `video`.
 
-### ev
+### Event Value `string`
 
-`string` Event Value - a numerical value associated with that event. For example, the length of the video played.
+`ev` is a numerical value associated with that event. For example, the length of the video played.
 
-### el
+### Event Label `string`
 
-`string` Event Label - the name of the element that caused the action. For example, `trailer` or `behindthescenes`
+`el` is the name of the element that caused the action. For example, `trailer` or `behindthescenes`
 
-### gv
+### Revenue Value `string`
 
-`string` Revenue Value is the revenue value of the event you want to track
+`gv` is the revenue value of the event you want to track
 
-### gvc
+### Currency `string`
 
-`string` Currency is the currency of the event you want to track
+`gvc` is the currency of the event you want to track
 
 ## 📝 License
 
