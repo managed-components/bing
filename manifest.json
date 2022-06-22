@@ -5,11 +5,10 @@
   "icon": "assets/bing.png",
   "categories": ["Advertising"],
   "allowCustomFields": false,
-  "permissions": [
-    {
-      "permission": "client_fetch",
-      "explanation": "reports attribution data back to Bing servers",
+  "permissions": {
+    "client_network_requests": {
+      "description": "reports attribution data back to Bing servers",
       "required": true
     }
-  ]
+  }
 }
