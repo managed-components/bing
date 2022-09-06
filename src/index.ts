@@ -50,7 +50,7 @@ const getECParams = (event: MCEvent) => {
   return data
 }
 
-const getStandardParams = (event: MCEvent) => {
+const getStandardParams = (event: MCEvent, settings: ComponentSettings) => {
   return {
     Ver: '2',
     p: event.client.url.href,
@@ -58,6 +58,7 @@ const getStandardParams = (event: MCEvent) => {
     lg: (event.client.language || '').split(',')[0].trim(),
     rn: (+(Math.random() * 1000000)).toString(),
     mid: crypto.randomUUID(),
+    ti: event.payload.ti || settings.ti,
     // TODO - how do we want to handle these?
     // sw: system.device.width,
     // sh: system.device.height,
@@ -65,9 +66,9 @@ const getStandardParams = (event: MCEvent) => {
   }
 }
 
-export default async function (manager: Manager, _settings: ComponentSettings) {
+export default async function (manager: Manager, settings: ComponentSettings) {
   manager.addEventListener('event', async event => {
-    const payload = getStandardParams(event)
+    const payload = getStandardParams(event, settings)
 
     if (Object.keys(payload).length) {
       const params = new URLSearchParams(payload).toString()
@@ -77,7 +78,7 @@ export default async function (manager: Manager, _settings: ComponentSettings) {
 
   manager.addEventListener('ecommerce', async event => {
     const payload = {
-      ...getStandardParams(event),
+      ...getStandardParams(event, settings),
       ...getECParams(event),
     }
 
