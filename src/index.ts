@@ -66,25 +66,24 @@ const getStandardParams = (event: MCEvent, settings: ComponentSettings) => {
   }
 }
 
+const handleEvent =
+  (settings: ComponentSettings, ec = false) =>
+  async (event: MCEvent) => {
+    const payload = ec
+      ? getStandardParams(event, settings)
+      : {
+          ...getStandardParams(event, settings),
+          ...getECParams(event),
+        }
+
+    if (Object.keys(payload).length) {
+      const params = new URLSearchParams(payload).toString()
+      event.client.fetch(`${TRACK_URL}?${params}`)
+    }
+  }
+
 export default async function (manager: Manager, settings: ComponentSettings) {
-  manager.addEventListener('event', async event => {
-    const payload = getStandardParams(event, settings)
-
-    if (Object.keys(payload).length) {
-      const params = new URLSearchParams(payload).toString()
-      event.client.fetch(`${TRACK_URL}?${params}`)
-    }
-  })
-
-  manager.addEventListener('ecommerce', async event => {
-    const payload = {
-      ...getStandardParams(event, settings),
-      ...getECParams(event),
-    }
-
-    if (Object.keys(payload).length) {
-      const params = new URLSearchParams(payload).toString()
-      event.client.fetch(`${TRACK_URL}?${params}`)
-    }
-  })
+  manager.addEventListener('pageview', handleEvent(settings))
+  manager.addEventListener('event', handleEvent(settings))
+  manager.addEventListener('ecommerce', handleEvent(settings, true))
 }

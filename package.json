@@ -10,7 +10,7 @@
     "bundle": "node esbuild.js",
     "build": "run-s test lint typecheck bundle",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
-    "test": "vitest run --globals",
+    "test": "vitest run --globals --passWithNoTests",
     "test:dev": "vitest --globals"
   },
   "repository": {
