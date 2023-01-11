@@ -52,16 +52,16 @@ const getECParams = (event: MCEvent) => {
 
 const getStandardParams = (event: MCEvent, settings: ComponentSettings) => {
   return {
-    Ver: '2',
-    p: event.client.url.href,
-    tl: event.client.title || '',
-    lg: (event.client.language || '').split(',')[0].trim(),
-    rn: (+(Math.random() * 1000000)).toString(),
-    mid: crypto.randomUUID(),
     ti: event.payload.ti || settings.ti,
-    // TODO - how do we want to handle these?
-    // sw: system.device.width,
-    // sh: system.device.height,
+    tl: event.client.title || '',
+    rn: (+(Math.random() * 1000000)).toString(),
+    sw: event.client.screenWidth,
+    sh: event.client.screenHeight,
+    lg: (event.client.language || '').split(',')[0].trim(),
+    p: event.client.url.href,
+    Ver: '2',
+    mid: crypto.randomUUID(),
+    // TODO - how do we want to handle screen color?
     // sc: system.device.colors,
   }
 }
@@ -69,7 +69,7 @@ const getStandardParams = (event: MCEvent, settings: ComponentSettings) => {
 const handleEvent =
   (settings: ComponentSettings, ec = false) =>
   async (event: MCEvent) => {
-    const payload = ec
+    const payload = !ec
       ? getStandardParams(event, settings)
       : {
           ...getStandardParams(event, settings),
