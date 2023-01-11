@@ -3,7 +3,9 @@ import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
 const TRACK_URL = 'https://bat.bing.com/action/0'
 
 const getECParams = (event: MCEvent) => {
-  const { payload, name } = event
+  const { payload: initialPayload, name } = event
+  const { ecommerce: payload } = initialPayload
+
   const data: any = {
     ec: 'ecommerce',
     gc: payload.currency,
