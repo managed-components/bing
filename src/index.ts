@@ -60,7 +60,8 @@ const getStandardParams = (
   const { payload: initialPayload } = event
   let payload
   if (ec) {
-    payload = initialPayload.ecommerce
+    const { products, ...restOfPayload } = initialPayload.ecommerce
+    payload = restOfPayload
   } else {
     payload = initialPayload
   }
