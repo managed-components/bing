@@ -57,8 +57,16 @@ const getStandardParams = (
   settings: ComponentSettings,
   ec: boolean
 ) => {
+  const { payload: initialPayload } = event
+  let payload
+  if (ec) {
+    payload = initialPayload.ecommerce
+  } else {
+    payload = initialPayload
+  }
   return {
-    ti: (ec ? event.payload.ecommerce.ti : event.payload.ti) || settings.ti,
+    ...payload,
+    ti: (ec ? payload.ecommerce.ti : payload.ti) || settings.ti,
     tl: event.client.title || '',
     rn: (+(Math.random() * 1000000)).toString(),
     sw: event.client.screenWidth,
@@ -67,6 +75,7 @@ const getStandardParams = (
     p: event.client.url.href,
     Ver: '2',
     mid: crypto.randomUUID(),
+
     // TODO - how do we want to handle screen color?
     // sc: system.device.colors,
   }
