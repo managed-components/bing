@@ -66,7 +66,7 @@ const getStandardParams = (
   }
   return {
     ...payload,
-    ti: (ec ? payload.ecommerce.ti : payload.ti) || settings.ti,
+    ti: payload.ti || settings.ti,
     tl: event.client.title || '',
     rn: (+(Math.random() * 1000000)).toString(),
     sw: event.client.screenWidth,
