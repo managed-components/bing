@@ -1,14 +1,22 @@
-import { omitOne } from './utils'
+import { omitNullish } from './utils'
 
 describe('Testing utils for Bing', () => {
-  it('Removes property from an object', () => {
+  it('Removes null properties from an object', () => {
     const payload = {
       foo: 'foo',
-      baz: 'baz',
+      zero: 0,
+      emptyStr: '',
+      bool: false,
+      nullish: null,
+      anotherNullish: null,
+      somethingUndefined: undefined,
     }
-    const clean = omitOne(payload, 'baz')
+    const clean = omitNullish(payload)
     const expected = {
       foo: 'foo',
+      zero: 0,
+      emptyStr: '',
+      bool: false,
     }
     expect(clean).toEqual(expected)
   })
