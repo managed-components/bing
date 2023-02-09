@@ -1,4 +1,5 @@
 import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
+import { omitNullish } from './utils'
 
 const TRACK_URL = 'https://bat.bing.com/action/0'
 
@@ -65,7 +66,8 @@ const getStandardParams = (
   } else {
     payload = initialPayload
   }
-  return {
+
+  const returnPayload = omitNullish({
     ...payload,
     ti: payload.ti || settings.ti,
     tl: event.client.title || '',
@@ -79,7 +81,9 @@ const getStandardParams = (
 
     // TODO - how do we want to handle screen color?
     // sc: system.device.colors,
-  }
+  })
+
+  return returnPayload
 }
 
 const handleEvent =
