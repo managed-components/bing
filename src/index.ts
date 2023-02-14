@@ -3,7 +3,7 @@ import { omitNullish } from './utils'
 
 const TRACK_URL = 'https://bat.bing.com/action/0'
 const CLICK_ID_PARAM = 'msclkid'
-const ONE_MONTH = (1000 * 60 * 60 * 24 * 365) / 12
+const THREE_MONTHS = 2628000000
 
 const getECParams = (event: MCEvent) => {
   const { payload: initialPayload, name } = event
@@ -121,7 +121,7 @@ const handleEvent =
       event.client.set(
         CLICK_ID_PARAM,
         event.client.url.searchParams.get(CLICK_ID_PARAM),
-        { expiry: 3 * ONE_MONTH }
+        { expiry: THREE_MONTHS }
       )
     }
 
