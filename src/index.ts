@@ -2,6 +2,8 @@ import { ComponentSettings, Manager, MCEvent } from '@managed-components/types'
 import { omitNullish } from './utils'
 
 const TRACK_URL = 'https://bat.bing.com/action/0'
+const CLICK_ID_PARAM = 'msclkid'
+const THREE_MONTHS = 7884000000
 
 const getECParams = (event: MCEvent) => {
   const { payload: initialPayload, name } = event
@@ -95,6 +97,36 @@ const handleEvent =
           ...getStandardParams(event, settings, ec),
           ...getECParams(event),
         }
+
+    // Handle Bing click id
+    // Click id can come from two places:
+    // 1- The URL on landing page after clicking on a Microsoft Ad
+    // it must then be stored in a first-party cookie
+    // 2- the previously created first party cookie
+    // in addition, a suffix gets added to the mscklid param sent to Bing
+    // to determine if user saw multiple ads
+
+    // if no click id param or existing cookie => mscklid param = N
+    // if msclkid cookie value and param values differ => mscklid = param one + suffix = 1
+    // if msclkid cookie value and param values are equal = mscklid + suffix = 0
+    let suffix = 'N'
+
+    if (event.client.url.searchParams.get(CLICK_ID_PARAM)) {
+      suffix =
+        event.client.url.searchParams.get(CLICK_ID_PARAM) ===
+        event.client.get(CLICK_ID_PARAM)
+          ? '0'
+          : '1'
+
+      event.client.set(
+        CLICK_ID_PARAM,
+        event.client.url.searchParams.get(CLICK_ID_PARAM),
+        { expiry: THREE_MONTHS }
+      )
+    }
+
+    const clkid = event.client.get(CLICK_ID_PARAM)
+    payload[CLICK_ID_PARAM] = `${clkid ? [clkid, suffix].join('-') : suffix}`
 
     if (Object.keys(payload).length) {
       const params = new URLSearchParams(payload).toString()
