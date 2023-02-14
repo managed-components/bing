@@ -3,7 +3,7 @@ import { omitNullish } from './utils'
 
 const TRACK_URL = 'https://bat.bing.com/action/0'
 const CLICK_ID_PARAM = 'msclkid'
-const THREE_MONTHS = 2628000000
+const THREE_MONTHS = 7884000000
 
 const getECParams = (event: MCEvent) => {
   const { payload: initialPayload, name } = event
