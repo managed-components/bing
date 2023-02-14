@@ -103,16 +103,30 @@ const handleEvent =
     // 1- The URL on landing page after clicking on a Microsoft Ad
     // it must then be stored in a first-party cookie
     // 2- the previously created first party cookie
-    if (/msclkid/.test(event.client.url.href)) {
+    // in addition, a suffix gets added to the mscklid param sent to Bing
+    // to determine if user saw multiple ads
+
+    // if no click id param or existing cookie => mscklid param = N
+    // if msclkid cookie value and param values differ => mscklid = param one + suffix = 1
+    // if msclkid cookie value and param values are equal = mscklid + suffix = 0
+    let suffix = 'N'
+
+    if (event.client.url.searchParams.get(CLICK_ID_PARAM)) {
+      suffix =
+        event.client.url.searchParams.get(CLICK_ID_PARAM) ===
+        event.client.get(CLICK_ID_PARAM)
+          ? '0'
+          : '1'
+
       event.client.set(
         CLICK_ID_PARAM,
         event.client.url.searchParams.get(CLICK_ID_PARAM),
-        { scope: 'infinite', expiry: 3 * ONE_MONTH }
+        { expiry: 3 * ONE_MONTH }
       )
     }
 
     const clkid = event.client.get(CLICK_ID_PARAM)
-    clkid && (payload[CLICK_ID_PARAM] = clkid)
+    payload[CLICK_ID_PARAM] = `${clkid ? [clkid, suffix].join('-') : suffix}`
 
     if (Object.keys(payload).length) {
       const params = new URLSearchParams(payload).toString()
