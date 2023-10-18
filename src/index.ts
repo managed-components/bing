@@ -58,6 +58,7 @@ const getECParams = (event: MCEvent) => {
 const getStandardParams = (
   event: MCEvent,
   settings: ComponentSettings,
+  evt: 'pageLoad' | 'custom',
   ec: boolean
 ) => {
   const { payload: initialPayload } = event
@@ -71,9 +72,10 @@ const getStandardParams = (
 
   const returnPayload = omitNullish({
     ...payload,
+    evt,
     ti: payload.ti || settings.ti,
     tl: event.client.title || '',
-    rn: (+(Math.random() * 1000000)).toString(),
+    rn: (+Math.floor(Math.random() * 1000000)).toString(), // ensure it's just a 6-digit integer
     sw: event.client.screenWidth,
     sh: event.client.screenHeight,
     lg: (event.client.language || '').split(',')[0].trim(),
@@ -89,15 +91,14 @@ const getStandardParams = (
 }
 
 const handleEvent =
-  (settings: ComponentSettings, ec = false) =>
+  (settings: ComponentSettings, evt: 'custom' | 'pageLoad', ec = false) =>
   async (event: MCEvent) => {
     const payload = !ec
-      ? getStandardParams(event, settings, ec)
+      ? getStandardParams(event, settings, evt, ec)
       : {
-          ...getStandardParams(event, settings, ec),
+          ...getStandardParams(event, settings, evt, ec),
           ...getECParams(event),
         }
-
     // Handle Bing click id
     // Click id can come from two places:
     // 1- The URL on landing page after clicking on a Microsoft Ad
@@ -135,7 +136,7 @@ const handleEvent =
   }
 
 export default async function (manager: Manager, settings: ComponentSettings) {
-  manager.addEventListener('pageview', handleEvent(settings))
-  manager.addEventListener('event', handleEvent(settings))
-  manager.addEventListener('ecommerce', handleEvent(settings, true))
+  manager.addEventListener('pageview', handleEvent(settings, 'pageLoad'))
+  manager.addEventListener('event', handleEvent(settings, 'custom'))
+  manager.addEventListener('ecommerce', handleEvent(settings, 'custom', true))
 }
