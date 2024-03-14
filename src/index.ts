@@ -126,7 +126,9 @@ const handleEvent =
       )
     }
 
-    const clkid = event.client.get(CLICK_ID_PARAM)
+    const clkid =
+      event.client.url.searchParams.get(CLICK_ID_PARAM) ||
+      event.client.get(CLICK_ID_PARAM)
     payload[CLICK_ID_PARAM] = `${clkid ? [clkid, suffix].join('-') : suffix}`
 
     if (Object.keys(payload).length) {
