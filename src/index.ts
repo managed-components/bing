@@ -50,9 +50,9 @@ const getECParams = (event: MCEvent) => {
         payload.checkout_id ||
         payload.product_id ||
         payload.name ||
-        Array.isArray(payload.products)
+        (Array.isArray(payload.products)
           ? payload.products.map((p: any) => p.name).join()
-          : ''
+          : '')
       data.ev =
         payload.revenue || payload.total || payload.value || payload.price
   }
