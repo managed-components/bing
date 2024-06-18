@@ -27,9 +27,10 @@ const getECParams = (event: MCEvent) => {
         payload.name ||
         payload.product_id ||
         payload.sku ||
-        Array.isArray(payload.products)
+        (Array.isArray(payload.products)
           ? payload.products.map((p: any) => p.name).join()
-          : ''
+          : '')
+
       data.ev = payload.price || payload.total || payload.value
       data.gv = payload.price || data.gv
       break
