@@ -54,7 +54,7 @@ Find out more about Managed Components [here](https://blog.cloudflare.com/zaraz-
 
 ### Currency `string`
 
-`gvc` is the currency of the event you want to track
+`gc` is the currency of the event you want to track
 
 ## 📝 License
 
