@@ -85,6 +85,8 @@ const getStandardParams = (
     sh: event.client.screenHeight,
     lg: (event.client.language || '').split(',')[0].trim(),
     p: event.client.url.href,
+    r: event.client.referer,
+    kl: event.client.title,
     Ver: '2',
     mid: crypto.randomUUID(),
 
